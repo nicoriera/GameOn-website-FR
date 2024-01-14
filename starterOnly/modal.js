@@ -27,35 +27,45 @@ function closeModal() {
 
 // FORMS
 
-function affihcerMessageErreur(message) {
+function afficherMessageErreur(message) {
   let formData = document.querySelector(".formData");
-  let messageErreur = document.getElementById("messageErreur");
 
-  if (!messageErreur) {
-    messageErreur = document.createElement("span");
-    messageErreur.id = "messageErreur";
-    messageErreur = message;
-    formData.append(messageErreur);
-  }
-  messageErreur.innerText = message;
+  formData.setAttribute("data-error", message);
+  console.log("message", message);
+  formData.setAttribute("data-error-visible", message ? "true" : "false");
 }
 
 function gererFormulaire() {
   try {
-    let inputPrenom = document.getElementById("first").value.trim();
-    verifierChamp(inputPrenom);
+    let inputPrenom = document.getElementById("first");
+    let prenom = inputPrenom.value.trim();
+    console.log("Prenom:", prenom);
+    verifierChampPrenom(prenom);
+    afficherMessageErreur(inputPrenom, "");
 
-    let inputNom = document.getElementById("last").value.trim();
-    verifierChampNom(inputNom);
+    let inputNom = document.getElementById("last");
+    let nom = inputNom.value.trim();
+    console.log("Nom:", nom);
+    verifierChampNom(nom);
+    afficherMessageErreur(inputNom, "");
 
-    let inputEmail = document.getElementById("email").value.trim();
-    validateEmail(inputEmail);
+    let inputEmail = document.getElementById("email");
+    let email = inputEmail.value.trim();
+    console.log("Email:", email);
+    validateEmail(email);
+    afficherMessageErreur(inputEmail, "");
 
-    let inputBirthdate = document.getElementById("birthdate").value.trim();
-    verifierChampBirthdate(inputBirthdate);
+    let inputBirthdate = document.getElementById("birthdate");
+    let birthdate = inputBirthdate.value.trim();
+    console.log("Birthdate:", birthdate);
+    verifierChampBirthdate(birthdate);
+    afficherMessageErreur(inputBirthdate, "");
 
-    let inputQuantity = document.getElementById("quantity").value.trim();
-    verifierChamp(inputQuantity);
+    let inputQuantity = document.getElementById("quantity");
+    let quantity = inputQuantity.value.trim();
+    console.log("Quantity:", quantity);
+    verifierChampQuan(quantity);
+    afficherMessageErreur(inputQuantity, "");
 
     let checkboxLocation = document.querySelectorAll('input[name="location"]');
     let location = "";
@@ -65,15 +75,20 @@ function gererFormulaire() {
         break;
       }
     }
+    console.log("Location:", location);
     verifierCheckbox(location);
-    affihcerMessageErreur("");
+    afficherMessageErreur(inputQuantity, "");
 
     let checkboxCondition = document.getElementById("checkbox1").checked;
+    console.log("Checkbox Condition:", checkboxCondition);
     verifierCondition(checkboxCondition);
+    afficherMessageErreur(document.getElementById("checkbox1"), "");
   } catch (erreur) {
-    affihcerMessageErreur(erreur.message);
+    console.error("Erreur:", erreur.message);
+    afficherMessageErreur(document.body, erreur.message);
   }
 }
+
 // Validation
 
 function validateEmail(email) {
@@ -88,9 +103,9 @@ function validateEmail(email) {
 
 // vérification des champs à l'envoi du formulaire
 
-function verifierChamp(champ) {
+function verifierChampPrenom(prenom) {
   // Si le champ est vide, on lance une exception
-  if (champ === "") {
+  if (prenom === "") {
     throw new Error(`Vous devez remplir le champ.`);
   }
 }
@@ -108,6 +123,13 @@ function verifierChampBirthdate(birthdate) {
   // Si le birthdate est vide, on lance une exception
   if (birthdate === "jj/mm/aaaa") {
     throw new Error("Vous devez entrer votre date de naissance.");
+  }
+}
+
+function verifierChampQuantity(quantity) {
+  // Si le quantity est vide, on lance une exception
+  if (quantity === "") {
+    throw new Error("Vous devez entrer un nombre.");
   }
 }
 
