@@ -31,7 +31,6 @@ function afficherMessageErreur(message) {
   let formData = document.querySelector(".formData");
 
   formData.setAttribute("data-error", message);
-  console.log("message", message);
   formData.setAttribute("data-error-visible", message ? "true" : "false");
 }
 
@@ -41,31 +40,26 @@ function gererFormulaire() {
     let prenom = inputPrenom.value.trim();
     console.log("Prenom:", prenom);
     verifierChampPrenom(prenom);
-    afficherMessageErreur(inputPrenom, "");
 
     let inputNom = document.getElementById("last");
     let nom = inputNom.value.trim();
     console.log("Nom:", nom);
     verifierChampNom(nom);
-    afficherMessageErreur(inputNom, "");
 
     let inputEmail = document.getElementById("email");
     let email = inputEmail.value.trim();
     console.log("Email:", email);
     validateEmail(email);
-    afficherMessageErreur(inputEmail, "");
 
     let inputBirthdate = document.getElementById("birthdate");
     let birthdate = inputBirthdate.value.trim();
     console.log("Birthdate:", birthdate);
     verifierChampBirthdate(birthdate);
-    afficherMessageErreur(inputBirthdate, "");
 
     let inputQuantity = document.getElementById("quantity");
     let quantity = inputQuantity.value.trim();
     console.log("Quantity:", quantity);
     verifierChampQuan(quantity);
-    afficherMessageErreur(inputQuantity, "");
 
     let checkboxLocation = document.querySelectorAll('input[name="location"]');
     let location = "";
@@ -77,7 +71,6 @@ function gererFormulaire() {
     }
     console.log("Location:", location);
     verifierCheckbox(location);
-    afficherMessageErreur(inputQuantity, "");
 
     let checkboxCondition = document.getElementById("checkbox1").checked;
     console.log("Checkbox Condition:", checkboxCondition);
@@ -85,7 +78,7 @@ function gererFormulaire() {
     afficherMessageErreur(document.getElementById("checkbox1"), "");
   } catch (erreur) {
     console.error("Erreur:", erreur.message);
-    afficherMessageErreur(document.body, erreur.message);
+    afficherMessageErreur(erreur.message);
   }
 }
 
