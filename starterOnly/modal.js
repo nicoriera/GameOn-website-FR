@@ -27,58 +27,101 @@ function closeModal() {
 
 // FORMS
 
-function afficherMessageErreur(message) {
-  let formData = document.querySelector(".formData");
-
-  formData.setAttribute("data-error", message);
-  formData.setAttribute("data-error-visible", message ? "true" : "false");
+function afficherMessageErreur(element, message) {
+  element.setAttribute("data-error", message);
+  element.setAttribute("data-error-visible", message ? "true" : "false");
 }
 
 function gererFormulaire() {
-  try {
-    let inputPrenom = document.getElementById("first");
-    let prenom = inputPrenom.value.trim();
-    console.log("Prenom:", prenom);
-    verifierChampPrenom(prenom);
+  let inputPrenom = document.getElementById("first");
+  let formDataPrenom = inputPrenom.parentNode;
+  let prenom;
 
-    let inputNom = document.getElementById("last");
-    let nom = inputNom.value.trim();
-    console.log("Nom:", nom);
-    verifierChampNom(nom);
+  let inputNom = document.getElementById("last");
+  let formDataNom = inputNom.parentNode;
+  let nom;
 
-    let inputEmail = document.getElementById("email");
-    let email = inputEmail.value.trim();
-    console.log("Email:", email);
-    validateEmail(email);
+  let inputEmail = document.getElementById("email");
+  let formDataEmail = inputEmail.parentNode;
+  let email;
 
-    let inputBirthdate = document.getElementById("birthdate");
-    let birthdate = inputBirthdate.value.trim();
-    console.log("Birthdate:", birthdate);
-    verifierChampBirthdate(birthdate);
+  let inputBirthdate = document.getElementById("birthdate");
+  let formDataBirthdate = inputBirthdate.parentNode;
+  let birthdate;
 
-    let inputQuantity = document.getElementById("quantity");
-    let quantity = inputQuantity.value.trim();
-    console.log("Quantity:", quantity);
-    verifierChampQuan(quantity);
+  let inputQuantity = document.getElementById("quantity");
+  let formDataQuantity = inputQuantity.parentNode;
+  let quantity;
 
-    let checkboxLocation = document.querySelectorAll('input[name="location"]');
-    let location = "";
-    for (let index = 0; index < checkboxLocation.length; index++) {
-      if (checkboxLocation[index].checked) {
-        location = checkboxLocation[index].value;
-        break;
-      }
+  let checkboxLocation = document.querySelectorAll('input[name="location"]');
+  let formDataLocation = checkboxLocation[0].parentNode;
+  let location = "";
+  for (let index = 0; index < checkboxLocation.length; index++) {
+    if (checkboxLocation[index].checked) {
+      location = checkboxLocation[index].value;
+      break;
     }
-    console.log("Location:", location);
-    verifierCheckbox(location);
+  }
 
-    let checkboxCondition = document.getElementById("checkbox1").checked;
-    console.log("Checkbox Condition:", checkboxCondition);
-    verifierCondition(checkboxCondition);
-    afficherMessageErreur(document.getElementById("checkbox1"), "");
+  let checkboxCondition = document.getElementById("checkbox1");
+  let formDataCondition = checkboxCondition.parentNode;
+  let checkboxConditionChecked = checkboxCondition.checked;
+
+  try {
+    prenom = inputPrenom.value.trim();
+    verifierChampPrenom(prenom);
+    afficherMessageErreur(formDataPrenom, "");
+
+    nom = inputNom.value.trim();
+    verifierChampNom(nom);
+    afficherMessageErreur(formDataNom, "");
+
+    email = inputEmail.value.trim();
+    validateEmail(email);
+    afficherMessageErreur(formDataEmail, "");
+
+    birthdate = inputBirthdate.value.trim();
+    verifierChampBirthdate(birthdate);
+    afficherMessageErreur(formDataBirthdate, "");
+
+    quantity = inputQuantity.value.trim();
+    verifierChampQuantity(quantity);
+    afficherMessageErreur(formDataQuantity, "");
+
+    verifierCheckbox(location);
+    afficherMessageErreur(formDataLocation, "");
+
+    verifierCondition(checkboxConditionChecked);
+    afficherMessageErreur(formDataCondition, "");
+    return true;
   } catch (erreur) {
     console.error("Erreur:", erreur.message);
-    afficherMessageErreur(erreur.message);
+    switch (erreur.message) {
+      case "Vous devez remplir le champ.":
+        afficherMessageErreur(formDataPrenom, erreur.message);
+        break;
+      case "Vous devez entrer 2 caractères ou plus pour le champ du nom.":
+        afficherMessageErreur(formDataNom, erreur.message);
+        break;
+      case "Vous devez entrer une adresse email valide.":
+        afficherMessageErreur(formDataEmail, erreur.message);
+        break;
+      case "Vous devez entrer votre date de naissance.":
+        afficherMessageErreur(formDataBirthdate, erreur.message);
+        break;
+      case "Vous devez entrer un nombre.":
+        afficherMessageErreur(formDataQuantity, erreur.message);
+        break;
+      case "Vous devez choisir une option.":
+        afficherMessageErreur(formDataLocation, erreur.message);
+        break;
+      case "Vous devez vérifier que vous acceptez les termes et conditions.":
+        afficherMessageErreur(formDataCondition, erreur.message);
+        break;
+      default:
+        break;
+    }
+    return false;
   }
 }
 
@@ -114,7 +157,7 @@ function verifierChampNom(nom) {
 
 function verifierChampBirthdate(birthdate) {
   // Si le birthdate est vide, on lance une exception
-  if (birthdate === "jj/mm/aaaa") {
+  if (birthdate === "") {
     throw new Error("Vous devez entrer votre date de naissance.");
   }
 }
@@ -143,13 +186,16 @@ function verifierCondition(condition) {
 }
 
 let form = document.querySelector("form");
-
+let submitButton = document.querySelector("button.btn-submit");
 form.addEventListener("submit", (event) => {
-  try {
-    event.preventDefault();
-    gererFormulaire();
-  } catch (error) {
-    console.log(error);
+  event.preventDefault();
+
+  // Si la validation réussit, changez le contenu de la modal
+  if (gererFormulaire()) {
+    form.innerHTML =
+      "<p>Merci pour votre soumission !</p><button class='btn-submit'>Fermer</button>";
+    let closeBtn = document.querySelector(".btn-submit");
+    closeBtn.addEventListener("click", closeModal);
   }
 });
 
