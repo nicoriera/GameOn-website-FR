@@ -27,53 +27,104 @@ function closeModal() {
 
 // FORMS
 
-function affihcerMessageErreur(message) {
-  let formData = document.querySelector(".formData");
-  let messageErreur = document.getElementById("messageErreur");
-
-  if (!messageErreur) {
-    messageErreur = document.createElement("span");
-    messageErreur.id = "messageErreur";
-    messageErreur = message;
-    formData.append(messageErreur);
-  }
-  messageErreur.innerText = message;
+function afficherMessageErreur(element, message) {
+  element.setAttribute("data-error", message);
+  element.setAttribute("data-error-visible", message ? "true" : "false");
 }
 
 function gererFormulaire() {
-  try {
-    let inputPrenom = document.getElementById("first").value.trim();
-    verifierChamp(inputPrenom);
+  let inputPrenom = document.getElementById("first");
+  let formDataPrenom = inputPrenom.parentNode;
+  let prenom;
 
-    let inputNom = document.getElementById("last").value.trim();
-    verifierChampNom(inputNom);
+  let inputNom = document.getElementById("last");
+  let formDataNom = inputNom.parentNode;
+  let nom;
 
-    let inputEmail = document.getElementById("email").value.trim();
-    validateEmail(inputEmail);
+  let inputEmail = document.getElementById("email");
+  let formDataEmail = inputEmail.parentNode;
+  let email;
 
-    let inputBirthdate = document.getElementById("birthdate").value.trim();
-    verifierChampBirthdate(inputBirthdate);
+  let inputBirthdate = document.getElementById("birthdate");
+  let formDataBirthdate = inputBirthdate.parentNode;
+  let birthdate;
 
-    let inputQuantity = document.getElementById("quantity").value.trim();
-    verifierChamp(inputQuantity);
+  let inputQuantity = document.getElementById("quantity");
+  let formDataQuantity = inputQuantity.parentNode;
+  let quantity;
 
-    let checkboxLocation = document.querySelectorAll('input[name="location"]');
-    let location = "";
-    for (let index = 0; index < checkboxLocation.length; index++) {
-      if (checkboxLocation[index].checked) {
-        location = checkboxLocation[index].value;
-        break;
-      }
+  let checkboxLocation = document.querySelectorAll('input[name="location"]');
+  let formDataLocation = checkboxLocation[0].parentNode;
+  let location = "";
+  for (let index = 0; index < checkboxLocation.length; index++) {
+    if (checkboxLocation[index].checked) {
+      location = checkboxLocation[index].value;
+      break;
     }
-    verifierCheckbox(location);
-    affihcerMessageErreur("");
+  }
 
-    let checkboxCondition = document.getElementById("checkbox1").checked;
-    verifierCondition(checkboxCondition);
+  let checkboxCondition = document.getElementById("checkbox1");
+  let formDataCondition = checkboxCondition.parentNode;
+  let checkboxConditionChecked = checkboxCondition.checked;
+
+  try {
+    prenom = inputPrenom.value.trim();
+    verifierChampPrenom(prenom);
+    afficherMessageErreur(formDataPrenom, "");
+
+    nom = inputNom.value.trim();
+    verifierChampNom(nom);
+    afficherMessageErreur(formDataNom, "");
+
+    email = inputEmail.value.trim();
+    validateEmail(email);
+    afficherMessageErreur(formDataEmail, "");
+
+    birthdate = inputBirthdate.value.trim();
+    verifierChampBirthdate(birthdate);
+    afficherMessageErreur(formDataBirthdate, "");
+
+    quantity = inputQuantity.value.trim();
+    verifierChampQuantity(quantity);
+    afficherMessageErreur(formDataQuantity, "");
+
+    verifierCheckbox(location);
+    afficherMessageErreur(formDataLocation, "");
+
+    verifierCondition(checkboxConditionChecked);
+    afficherMessageErreur(formDataCondition, "");
+    return true;
   } catch (erreur) {
-    affihcerMessageErreur(erreur.message);
+    console.error("Erreur:", erreur.message);
+    switch (erreur.message) {
+      case "Vous devez remplir le champ.":
+        afficherMessageErreur(formDataPrenom, erreur.message);
+        break;
+      case "Vous devez entrer 2 caractères ou plus pour le champ du nom.":
+        afficherMessageErreur(formDataNom, erreur.message);
+        break;
+      case "Vous devez entrer une adresse email valide.":
+        afficherMessageErreur(formDataEmail, erreur.message);
+        break;
+      case "Vous devez entrer votre date de naissance.":
+        afficherMessageErreur(formDataBirthdate, erreur.message);
+        break;
+      case "Vous devez entrer un nombre.":
+        afficherMessageErreur(formDataQuantity, erreur.message);
+        break;
+      case "Vous devez choisir une option.":
+        afficherMessageErreur(formDataLocation, erreur.message);
+        break;
+      case "Vous devez vérifier que vous acceptez les termes et conditions.":
+        afficherMessageErreur(formDataCondition, erreur.message);
+        break;
+      default:
+        break;
+    }
+    return false;
   }
 }
+
 // Validation
 
 function validateEmail(email) {
@@ -88,9 +139,9 @@ function validateEmail(email) {
 
 // vérification des champs à l'envoi du formulaire
 
-function verifierChamp(champ) {
+function verifierChampPrenom(prenom) {
   // Si le champ est vide, on lance une exception
-  if (champ === "") {
+  if (prenom === "") {
     throw new Error(`Vous devez remplir le champ.`);
   }
 }
@@ -106,8 +157,15 @@ function verifierChampNom(nom) {
 
 function verifierChampBirthdate(birthdate) {
   // Si le birthdate est vide, on lance une exception
-  if (birthdate === "jj/mm/aaaa") {
+  if (birthdate === "") {
     throw new Error("Vous devez entrer votre date de naissance.");
+  }
+}
+
+function verifierChampQuantity(quantity) {
+  // Si le quantity est vide, on lance une exception
+  if (quantity === "") {
+    throw new Error("Vous devez entrer un nombre.");
   }
 }
 
@@ -128,13 +186,16 @@ function verifierCondition(condition) {
 }
 
 let form = document.querySelector("form");
-
+let submitButton = document.querySelector("button.btn-submit");
 form.addEventListener("submit", (event) => {
-  try {
-    event.preventDefault();
-    gererFormulaire();
-  } catch (error) {
-    console.log(error);
+  event.preventDefault();
+
+  // Si la validation réussit, changez le contenu de la modal
+  if (gererFormulaire()) {
+    form.innerHTML =
+      "<p>Merci pour votre soumission !</p><button class='btn-submit'>Fermer</button>";
+    let closeBtn = document.querySelector(".btn-submit");
+    closeBtn.addEventListener("click", closeModal);
   }
 });
 
