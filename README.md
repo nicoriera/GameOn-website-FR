@@ -1,5 +1,11 @@
 # Projet GameOn
-1. Forkez ce repo ;
-2. Il est conseillé d'utiliser VisualStudio Code et vous pouvez utiliser Docker, mais ce n'est pas obligatoire ;
-3. Il n'y a aucune dépendance ;
-4. Vous ne devez utiliser que du CSS personnalisé et du JavaScript pur, sans jQuery, Bootstrap ou autre librairie.
+
+## Description
+Bienvenue dans le projet GameOn ! Ce projet est destiné à être utilisé comme un point de départ pour les développements web. Il utilise live-server comme serveur de développement pour une expérience de développement fluide.
+
+## Installation
+1. Clonez le repository sur votre machine locale.
+2. Assurez-vous d'avoir [Node.js](https://nodejs.org/) installé sur votre machine.
+3. Installez les dépendances de développement en utilisant la commande suivante :
+   ```bash
+   npm install
