@@ -167,7 +167,7 @@ form.addEventListener("submit", (event) => {
 
   if (gererFormulaire()) {
     form.innerHTML =
-      "<p>Merci pour<br> votre inscription</p><button class='btn-submit'>Fermer</button>";
+      "<p class='text-inscription'>Merci pour<br> votre inscription</p><button class='btn-submit'>Fermer</button>";
     let closeBtn = document.querySelector(".btn-submit");
     closeBtn.addEventListener("click", closeModal);
   }

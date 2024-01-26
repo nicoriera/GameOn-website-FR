@@ -53,20 +53,28 @@ img {
 }
 
 .topnav a:hover {
-  background-color: #ff0000;
+  background-color: #fe142f;
   color: #ffffff;
   border-radius: 15px;
 }
 
 .topnav a.active {
-  background-color: #ff0000;
+  background-color: #fe142f;
   color: #ffffff;
   border-radius: 15px;
+  text-decoration: underline;
+  text-underline-offset: 0.5rem;
 }
 
 .topnav .icon {
   display: none;
-  color: #ff001b;
+  color: #fe142f;
+}
+
+footer {
+  margin: 20px;
+  padding: 10px;
+  font-family: var(--font-slab);
 }
 
 @media screen and (max-width: 768px) {
@@ -95,11 +103,11 @@ img {
   .header-logo {
     width: 103px;
     height: 19px;
+  }
 
-    img {
-      width: 100%;
-      height: 100%;
-    }
+  .header-logo img {
+    width: 100%;
+    height: 100%;
   }
 
   .topnav {
@@ -135,8 +143,23 @@ img {
     }
   }
 
+  .hero-content {
+    padding: 0rem;
+  }
+
+  .hero-headline {
+    font-size: 2.5rem;
+  }
+
+  .hero-text {
+    margin: 20px 0 0 0;
+    font-size: 0.8125rem;
+  }
+
   footer {
-    padding: 0;
+    margin: 0;
+    padding: 2px;
+    font-family: var(--font-slab);
   }
 }
 
@@ -177,12 +200,6 @@ main {
 
 .modal-btn:hover {
   background: #3876ac;
-}
-
-.footer {
-  margin: 20px;
-  padding: 10px;
-  font-family: var(--font-slab);
 }
 
 /* Modal form */
@@ -233,9 +250,21 @@ main {
 
 .modal-body {
   padding: 15px 8%;
-  margin: 15px auto;
-  height: 750px;
   max-height: 851px;
+
+  .text-inscription {
+    display: flex;
+    margin-bottom: 0;
+    padding: 0.5vw;
+    height: 585px;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    font-size: 2.25rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 3.2085rem;
+  }
 }
 
 label {
@@ -258,10 +287,11 @@ input {
   font-size: 20px;
   height: 48px;
 }
+
 .formData[data-error]::after {
   content: attr(data-error);
   font-size: 0.4em;
-  color: #e54858;
+  color: #fe142f;
   display: block;
   margin-top: 7px;
   margin-bottom: 7px;
@@ -274,7 +304,7 @@ input {
   opacity: 1;
 }
 .formData[data-error-visible="true"] .text-control {
-  border: 2px solid #e54858;
+  border: 2px solid #fe142f;
 }
 
 /* input[data-error]::after {
@@ -378,11 +408,13 @@ input {
   margin: 0 auto;
   border-radius: 7px;
   font-size: 1rem;
-  padding: 12px 82px;
+  padding: 12px 70px;
   color: #fff;
   cursor: pointer;
   border: 0;
+  margin-top: 10px;
 }
+
 /* custom select styles */
 .custom-select {
   position: relative;
@@ -407,8 +439,8 @@ input {
   width: 11px;
   height: 11px;
   border: 3px solid transparent;
-  border-bottom-color: #f00;
-  border-left-color: #f00;
+  border-bottom-color: #fe142f;
+  border-left-color: #fe142f;
   transform: rotate(-48deg);
   border-radius: 5px 0 5px 0;
 }
@@ -452,7 +484,12 @@ input {
 /* custom select end */
 .text-label {
   font-weight: normal;
-  font-size: 16px;
+  font-size: 0.875rem;
+}
+
+label {
+  font-size: 0.875rem;
+  margin-bottom: 11px;
 }
 .hero-section {
   border-radius: 10px;
@@ -523,11 +560,7 @@ input {
 .hero-section > .btn-signup {
   display: none;
 }
-footer {
-  padding-left: 2vw;
-  padding-right: 2vw;
-  margin: 0 20px;
-}
+
 @media screen and (max-width: 800px) {
   .hero-section {
     display: block;
@@ -562,17 +595,25 @@ footer {
     padding: 12px 35px;
   }
   .copyrights {
-    margin-top: 50px;
+    margin-top: 30px;
     text-align: center;
   }
-}
 
-@keyframes modalopen {
-  from {
-    opacity: 0;
-    transform: translateY(-150px);
+  .content {
+    padding: 0;
+    margin: 0;
+    border-radius: 10px 10px 0 0;
+    position: fixed;
+    bottom: 0;
   }
-  to {
-    opacity: 1;
+
+  @keyframes modalopen {
+    from {
+      opacity: 0;
+      transform: translateY(-150px);
+    }
+    to {
+      opacity: 1;
+    }
   }
 }
