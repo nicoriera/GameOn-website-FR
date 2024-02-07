@@ -1,29 +1,36 @@
+// Fonction pour gérer la modification de la navigation sur mobile
 function editNav() {
   var x = document.getElementById("myTopnav");
   x.classList.toggle("responsive");
 }
 
+// Sélection des éléments de la modal
 const modalbg = document.querySelector(".bground");
 const modalBtn = document.querySelectorAll(".modal-btn");
 const closeModalBtn = document.querySelectorAll(".close");
 const formData = document.querySelectorAll(".formData");
 
+// Ajout des écouteurs d'événements pour ouvrir et fermer le modal
 modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
 closeModalBtn.forEach((btn) => btn.addEventListener("click", closeModal));
 
+// Fonction pour afficher le modal
 function launchModal() {
   modalbg.style.display = "block";
 }
 
+// Fonction pour fermer le modal
 function closeModal() {
   modalbg.style.display = "none";
 }
 
+// Fonction pour afficher un message d'erreur à côté du champ de formulaire
 function afficherMessageErreur(element, message) {
   element.setAttribute("data-error", message);
   element.setAttribute("data-error-visible", message ? "true" : "false");
 }
 
+// Fonction pour gérer un champ de formulaire avec validation
 function handleField(
   inputElement,
   validationFunction,
@@ -44,8 +51,10 @@ function handleField(
   return value;
 }
 
+// Gestion du formulaire
 function gererFormulaire() {
   try {
+    // Validation de chaque champ du formulaire
     handleField(
       document.getElementById("first"),
       verifierChampPrenom,
@@ -81,6 +90,7 @@ function gererFormulaire() {
       document.getElementById("quantity").parentNode
     );
 
+    // Validation de la checkbox pour la localisation
     let location = "";
     let checkboxLocation = document.querySelectorAll('input[name="location"]');
     for (let index = 0; index < checkboxLocation.length; index++) {
@@ -96,6 +106,7 @@ function gererFormulaire() {
       checkboxLocation[0].parentNode
     );
 
+    // Validation de la checkbox pour les termes et conditions
     let checkboxCondition = document.getElementById("checkbox1");
     handleField(
       checkboxCondition,
@@ -110,6 +121,7 @@ function gererFormulaire() {
   }
 }
 
+// Fonction de validation de l'adresse email
 function validateEmail(email) {
   let emailRegExp = new RegExp(
     "^[a-zA-Z0-9._-]+@[a-z0-9._-]{2,}\\.[a-z]{2,4}$"
@@ -119,6 +131,7 @@ function validateEmail(email) {
   }
 }
 
+// Fonctions de validation pour les champs du formulaire
 function verifierChampPrenom(prenom) {
   if (prenom === "") {
     throw new Error("Vous devez remplir le champ.");
@@ -159,13 +172,16 @@ function verifierCondition(condition) {
   }
 }
 
+// Soumission du formulaire
 let form = document.querySelector("form");
 let submitButton = document.querySelector("button.btn-submit");
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
 
+  // Gestion du formulaire avant la soumission
   if (gererFormulaire()) {
+    // Modification du contenu du formulaire après la soumission réussie
     form.innerHTML =
       "<p class='text-inscription'>Merci pour<br> votre inscription</p><button class='btn-submit'>Fermer</button>";
     let closeBtn = document.querySelector(".btn-submit");
