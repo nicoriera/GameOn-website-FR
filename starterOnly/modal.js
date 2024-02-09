@@ -165,7 +165,7 @@ function verifierCheckbox(checkbox) {
 }
 
 function verifierCondition(condition) {
-  if (!condition.checked) {
+  if (condition.checked) {
     throw new Error(
       "Vous devez vérifier que vous acceptez les termes et conditions."
     );
