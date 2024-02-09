@@ -475,6 +475,7 @@ label {
   .hero-section {
     display: block;
     box-shadow: unset;
+    max-height: unset;
   }
   .hero-content {
     background: #fff;
@@ -595,6 +596,10 @@ label {
 }
 
 @media screen and (max-width: 540px) {
+  body {
+    overflow: hidden;
+  }
+
   .topnav a {
     display: none;
   }

@@ -14,7 +14,7 @@ const formData = document.querySelectorAll(".formData");
 modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
 closeModalBtn.forEach((btn) => btn.addEventListener("click", closeModal));
 
-// Fonction pour afficher le modal
+// Fonction pour afficher le modal`£
 function launchModal() {
   modalbg.style.display = "block";
 }
@@ -107,12 +107,12 @@ function gererFormulaire() {
     );
 
     // Validation de la checkbox pour les termes et conditions
-    let checkboxCondition = document.getElementById("checkbox1");
+
     handleField(
-      checkboxCondition,
+      document.getElementById("checkbox1"),
       verifierCondition,
       "Vous devez vérifier que vous acceptez les termes et conditions.",
-      checkboxCondition.parentNode
+      document.getElementById("checkbox1").parentNode
     );
 
     return true;
@@ -165,7 +165,7 @@ function verifierCheckbox(checkbox) {
 }
 
 function verifierCondition(condition) {
-  if (condition === false) {
+  if (!condition.checked) {
     throw new Error(
       "Vous devez vérifier que vous acceptez les termes et conditions."
     );
