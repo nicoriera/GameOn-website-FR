@@ -1,127 +1,118 @@
-// Fonction pour gérer la modification de la navigation sur mobile
+// Function to handle navigation modification on mobile
 function editNav() {
   var x = document.getElementById("myTopnav");
   x.classList.toggle("responsive");
 }
 
-// Sélection des éléments de la modal
+// Selection of modal elements
 const modalbg = document.querySelector(".bground");
 const modalBtn = document.querySelectorAll(".modal-btn");
 const closeModalBtn = document.querySelectorAll(".close");
 const formData = document.querySelectorAll(".formData");
+const form = document.querySelector("form");
 
-// Ajout des écouteurs d'événements pour ouvrir et fermer le modal
+// Adding event listeners to open and close the modal
 modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
 closeModalBtn.forEach((btn) => btn.addEventListener("click", closeModal));
 
-// Fonction pour afficher le modal`£
+// Function to display the modal
 function launchModal() {
   modalbg.style.display = "block";
 }
 
-// Fonction pour fermer le modal
+// Function to close the modal
 function closeModal() {
   modalbg.style.display = "none";
+  form.style.display = "block";
+  // Remove the thank you message
+
+  const thankYouMessage = document.querySelector(".text-inscription");
+  if (thankYouMessage) {
+    thankYouMessage.remove();
+  }
+  // Remove the close button
+  const submitButton = document.querySelector("button.btn-submit");
+  if (submitButton) {
+    submitButton.remove();
+  }
 }
 
-// Fonction pour afficher un message d'erreur à côté du champ de formulaire
-function afficherMessageErreur(element, message) {
+// Function to display an error message next to the form field
+function displayErrorMessage(element, message) {
   element.setAttribute("data-error", message);
   element.setAttribute("data-error-visible", message ? "true" : "false");
 }
 
-// Fonction pour gérer un champ de formulaire avec validation
+// Function to handle a form field with validation
 function handleField(
   inputElement,
   validationFunction,
-  errorMessage,
-  formDataElement
+  isCheckboxOrRadio = false
 ) {
-  let value = inputElement.value.trim();
+  let value = isCheckboxOrRadio
+    ? inputElement.checked
+    : inputElement.value.trim();
+
+  let formDataElement = inputElement.parentNode;
+
   try {
     validationFunction(value);
-    afficherMessageErreur(formDataElement, "");
-  } catch (erreur) {
-    console.error("Erreur:", erreur.message);
-    if (erreur.message === errorMessage) {
-      afficherMessageErreur(formDataElement, erreur.message);
+
+    displayErrorMessage(formDataElement, "");
+  } catch (error) {
+    if (error.message) {
+      displayErrorMessage(formDataElement, error.message);
     }
-    throw erreur;
+    throw error;
   }
   return value;
 }
 
-// Gestion du formulaire
-function gererFormulaire() {
+// Form management
+function manageForm() {
   try {
-    // Validation de chaque champ du formulaire
-    handleField(
-      document.getElementById("first"),
-      verifierChampPrenom,
-      "Vous devez remplir le champ.",
-      document.getElementById("first").parentNode
+    const formFields = [
+      { element: document.getElementById("first"), validator: checkFirstName },
+      { element: document.getElementById("last"), validator: checkLastName },
+      { element: document.getElementById("email"), validator: validateEmail },
+      {
+        element: document.getElementById("birthdate"),
+        validator: checkBirthdate,
+      },
+      {
+        element: document.getElementById("quantity"),
+        validator: checkQuantity,
+      },
+      {
+        element: document.getElementById("checkbox1"),
+        validator: checkCondition,
+        checkboxOrRadio: true,
+      },
+    ];
+
+    formFields.forEach((field) =>
+      handleField(field.element, field.validator, field.checkboxOrRadio)
     );
 
-    handleField(
-      document.getElementById("last"),
-      verifierChampNom,
-      "Vous devez entrer 2 caractères ou plus pour le champ du nom.",
-      document.getElementById("last").parentNode
+    // Validation of the input radio for location
+    const inputRadioLocation = Array.from(
+      document.querySelectorAll('input[name="location"]')
     );
+    const location = inputRadioLocation.find((input) => input.checked);
 
-    handleField(
-      document.getElementById("email"),
-      validateEmail,
-      "Vous devez entrer une adresse email valide.",
-      document.getElementById("email").parentNode
-    );
-
-    handleField(
-      document.getElementById("birthdate"),
-      verifierChampBirthdate,
-      "Vous devez entrer votre date de naissance.",
-      document.getElementById("birthdate").parentNode
-    );
-
-    handleField(
-      document.getElementById("quantity"),
-      verifierChampQuantity,
-      "Vous devez entrer un nombre.",
-      document.getElementById("quantity").parentNode
-    );
-
-    // Validation de la checkbox pour la localisation
-    let location = "";
-    let checkboxLocation = document.querySelectorAll('input[name="location"]');
-    for (let index = 0; index < checkboxLocation.length; index++) {
-      if (checkboxLocation[index].checked) {
-        location = checkboxLocation[index].value;
-        break;
-      }
+    if (!location) {
+      handleField(inputRadioLocation[0], checkInputRadio, true);
+    } else {
+      handleField(location, checkInputRadio, true);
     }
-    handleField(
-      { value: location },
-      verifierCheckbox,
-      "Vous devez choisir une option.",
-      checkboxLocation[0].parentNode
-    );
-
-    // Validation de la checkbox pour les termes et conditions
-
-    handleField(
-      document.getElementById("checkbox1"),
-      verifierCondition,
-      "Vous devez vérifier que vous acceptez les termes et conditions.",
-      document.getElementById("checkbox1").parentNode
-    );
 
     return true;
-  } catch (erreur) {
+  } catch (error) {
     return false;
   }
 }
 
-// Fonction de validation de l'adresse email
+// Function to validate an email address
 function validateEmail(email) {
   let emailRegExp = new RegExp(
     "^[a-zA-Z0-9._-]+@[a-z0-9._-]{2,}\\.[a-z]{2,4}$"
@@ -131,60 +122,81 @@ function validateEmail(email) {
   }
 }
 
-// Fonctions de validation pour les champs du formulaire
-function verifierChampPrenom(prenom) {
-  if (prenom === "") {
+// Validation functions for form fields
+function checkFirstName(firstName) {
+  if (firstName === "") {
     throw new Error("Vous devez remplir le champ.");
   }
 }
 
-function verifierChampNom(nom) {
-  if (nom.length < 2) {
+function checkLastName(lastName) {
+  if (lastName.length < 2) {
     throw new Error(
       "Vous devez entrer 2 caractères ou plus pour le champ du nom."
     );
   }
 }
 
-function verifierChampBirthdate(birthdate) {
+function checkBirthdate(birthdate) {
   if (birthdate === "") {
     throw new Error("Vous devez entrer votre date de naissance.");
   }
 }
 
-function verifierChampQuantity(quantity) {
+function checkQuantity(quantity) {
   if (quantity === "") {
     throw new Error("Vous devez entrer un nombre.");
   }
 }
 
-function verifierCheckbox(checkbox) {
-  if (checkbox === "") {
+function checkInputRadio(inputRadioLocation) {
+  if (!inputRadioLocation) {
     throw new Error("Vous devez choisir une option.");
   }
 }
 
-function verifierCondition(condition) {
-  if (condition.checked) {
+function checkCondition(element) {
+  if (!element) {
     throw new Error(
       "Vous devez vérifier que vous acceptez les termes et conditions."
     );
   }
 }
 
-// Soumission du formulaire
-let form = document.querySelector("form");
-let submitButton = document.querySelector("button.btn-submit");
+function createSuccessMessage() {
+  const successMessage = document.createElement("p");
+  successMessage.classList.add("text-inscription");
+  successMessage.textContent = "Merci pour votre inscription !";
+  return successMessage;
+}
+
+function createCloseButton() {
+  const closeButton = document.createElement("button");
+  closeButton.classList.add("btn-submit");
+  closeButton.textContent = "Fermer";
+  closeButton.addEventListener("click", () => {
+    closeModal();
+  });
+  return closeButton;
+}
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
 
-  // Gestion du formulaire avant la soumission
-  if (gererFormulaire()) {
-    // Modification du contenu du formulaire après la soumission réussie
-    form.innerHTML =
-      "<p class='text-inscription'>Merci pour<br> votre inscription</p><button class='btn-submit'>Fermer</button>";
-    let closeBtn = document.querySelector(".btn-submit");
-    closeBtn.addEventListener("click", closeModal);
+  // Handling the form before submission
+  if (manageForm()) {
+    // Reset the form fields
+    form.reset();
+
+    // Hide the form
+    form.style.display = "none";
+
+    // Create and display the success message
+    const successMessage = createSuccessMessage();
+    form.insertAdjacentElement("afterend", successMessage);
+
+    // Create and display the close button
+    const closeButton = createCloseButton();
+    successMessage.insertAdjacentElement("afterend", closeButton);
   }
 });
